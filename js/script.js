@@ -284,7 +284,7 @@ var TrashModel = function(_lable, _cell, remarks) {
       return 0;
     })
     //直近の日付を更新
-    var now = new Date(today);
+    var now = new Date();
     for (var i in day_list) {
       if (this.mostRecent == null && now.getTime() < day_list[i].getTime() + 24 * 60 * 60 * 1000) {
         this.mostRecent = day_list[i];
