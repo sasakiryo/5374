@@ -324,7 +324,7 @@ var CenterModel = function(row) {
 	this.PDates = new Array();
 	
 	for(var i = 1; i < row.length; i++) {
-		PDates.push(getDay(row,i));
+		this.PDates.push(getDay(row,i));
   }  
 }
 /**
