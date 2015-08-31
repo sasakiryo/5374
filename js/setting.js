@@ -15,4 +15,4 @@ var SkipSuspend = true; // 休止期間を除去するときは、true。奈良�
 
 // テストのために日を指定して実行
 //var TestDate = new Date(2015 ,10 - 1 , 7);
-var TsetDate = null;
+var TestDate = null;
