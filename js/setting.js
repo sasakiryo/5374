@@ -14,5 +14,5 @@ var WeekShift = false; // 休止期間なら週をずらすときは、true。�
 var SkipSuspend = true; // 休止期間を除去するときは、true。奈良の仕様は、true。
 
 // テストのために日を指定して実行
-var TestDate = new Date(2015 ,10 - 1 , 7);
+var TestDate = new Date(2016 ,1 - 1 , 2);
 //var TestDate = null;
