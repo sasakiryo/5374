@@ -11,24 +11,31 @@ var AreaModel = function() {
   /**
   各ゴミのカテゴリに対して、最も直近の日付を計算します。
   */
-  this.calcMostRect = function() {
+  this.calcMostRect = function(today) {
     for (var i = 0; i < this.trash.length; i++) {
-      this.trash[i].calcMostRect(this);
+      this.trash[i].calcMostRect(this, today);
     }
   }
   /**
     休止期間（主に年末年始）かどうかを判定します。
   */
+  //変更　センターオブジェクトの構造を変更したため変更　期間でなく個別な日付で判断
   this.isBlankDay = function(currentDate) {
     if (!this.center) {
         return false;
-    }
-    var period = [this.center.startDate, this.center.endDate];
-
-    if (period[0].getTime() <= currentDate.getTime() &&
-      currentDate.getTime() <= period[1].getTime()) {
-      return true;
-    }
+	}
+	
+	for(var i in this.center.PauseDates){
+		var PauseDate = this.center.PauseDates[i];
+		
+		//変更　期間でなく、１日単位で対応
+		if (PauseDate.getTime() <= currentDate.getTime() &&
+		  currentDate.getTime() <= (PauseDate.getTime() + (1000 * 60 * 60 * 24))) {
+		  return true;
+		  }
+		
+		}
+	
     return false;
   }
   /**
@@ -162,7 +169,7 @@ var TrashModel = function(_lable, _cell, remarks) {
   このゴミの年間のゴミの日を計算します。
   センターが休止期間がある場合は、その期間１週間ずらすという実装を行っております。
 */
-  this.calcMostRect = function(areaObj) {
+  this.calcMostRect = function(areaObj, today) {
     var day_mix = this.dayCell;
     var result_text = "";
     var day_list = new Array();
@@ -170,7 +177,7 @@ var TrashModel = function(_lable, _cell, remarks) {
     // 定期回収の場合
     if (this.regularFlg == 1) {
 
-      var today = new Date();
+      //var today = new Date();
 
       // 12月 +3月　を表現
       for (var i = 0; i < MaxMonth; i++) {
@@ -303,15 +310,26 @@ var TrashModel = function(_lable, _cell, remarks) {
 /**
 センターのデータを管理します。
 */
-var CenterModel = function(row) {
-  function getDay(center, index) {
-    var tmp = center[index].split("/");
-    return new Date(tmp[0], tmp[1] - 1, tmp[2]);
-  }
 
+//変更　センターデータの構造を期間ではなく個別な日付の配列で管理
+
+var CenterModel = function(row) {
+	
   this.name = row[0];
-  this.startDate = getDay(row, 1);
-  this.endDate = getDay(row, 2);
+  
+  this.PauseDates = function getDay(center) {
+	var PDates = new Array();
+	
+	for(var i = 1; i < center.length; i++) {
+	var tmp = center[i].split("/");
+	var pd = new Date(tmp[0], tmp[1] - 1, tmp[2]);
+	
+	PDates.push(pd);
+  }
+  return PDates;
+}
+  
+  
 }
 /**
 * ゴミのカテゴリを管理するクラスです。
@@ -490,10 +508,15 @@ $(function() {
     //参考 http://satussy.blogspot.jp/2011/12/javascript-svg.html
     var ableSVG = (window.SVGAngle !== void 0);
     //var ableSVG = false;  // SVG未使用の場合、descriptionの1項目目を使用
-    var areaModel = areaModels[row_index];
-    var today = new Date();
+	var areaModel = areaModels[row_index];
+	//TestDateで指定した日付で実行できる
+	if(TestDate == null) {
+	var today = new Date();
+	} else {
+		var today = new Date(TestDate.getFullYear,TestDate.getMonth(),TestDate.getDate);
+		}
     //直近の一番近い日付を計算します。
-    areaModel.calcMostRect();
+    areaModel.calcMostRect(today);
     //トラッシュの近い順にソートします。
     areaModel.sortTrash();
     var accordion_height = $(window).height() / descriptions.length;
