@@ -314,14 +314,12 @@ var TrashModel = function(_lable, _cell, remarks) {
 //変更　センターデータの構造を期間ではなく個別な日付の配列で管理
 
 var CenterModel = function(row) {
-	
+	this.name = row[0];
+	this.PDates = new Array();
   function getDay(center, index) {
 	var tmp = center[index].split("/");
 	return new Date(tmp[0], tmp[1] - 1, tmp[2]);
 	}
-	
-	this.name = row[0];
-	this.PDates = new Array();
 	
 	for(var i = 1; i < row.length; i++) {
 		this.PDates.push(getDay(row,i));
