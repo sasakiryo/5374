@@ -25,8 +25,8 @@ var AreaModel = function() {
         return false;
 	}
 	
-	for(var i in this.center.PauseDates){
-		var PauseDate = this.center.PauseDates[i];
+	for(var i in this.center.PDates){
+		var PauseDate = this.center.PDates[i];
 		
 		//変更　期間でなく、１日単位で対応
 		if (PauseDate.getTime() <= currentDate.getTime() &&
@@ -315,21 +315,17 @@ var TrashModel = function(_lable, _cell, remarks) {
 
 var CenterModel = function(row) {
 	
-  this.name = row[0];
-  
-  this.PauseDates = function getDay(center) {
-	var PDates = new Array();
+  function getDay(center, index) {
+	var tmp = center[index].split("/");
+	return new Date(tmp[0], tmp[1] - 1, tmp[2]);
+	}
 	
-	for(var i = 1; i < center.length; i++) {
-	var tmp = center[i].split("/");
-	var pd = new Date(tmp[0], tmp[1] - 1, tmp[2]);
+	this.name = row[0];
+	this.PDates = new Array();
 	
-	PDates.push(pd);
-  }
-  return PDates;
-}
-  
-  
+	for(var i = 1; i < row.length; i++) {
+		PDates.push(getDay(row,i));
+  }  
 }
 /**
 * ゴミのカテゴリを管理するクラスです。
