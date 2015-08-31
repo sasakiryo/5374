@@ -30,7 +30,7 @@ var AreaModel = function() {
 		
 		//変更　期間でなく、１日単位で対応
 		if (PauseDate.getTime() <= currentDate.getTime() &&
-		  currentDate.getTime() <= (PauseDate.getTime() + (1000 * 60 * 60 * 24))) {
+		  currentDate.getTime() < (PauseDate.getTime() + (1000 * 60 * 60 * 24))) {
 		  return true;
 		  }
 		
