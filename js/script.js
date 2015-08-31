@@ -11,9 +11,9 @@ var AreaModel = function() {
   /**
   各ゴミのカテゴリに対して、最も直近の日付を計算します。
   */
-  this.calcMostRect = function(today) {
+  this.calcMostRect = function() {
     for (var i = 0; i < this.trash.length; i++) {
-      this.trash[i].calcMostRect(this, today);
+      this.trash[i].calcMostRect(this);
     }
   }
   /**
@@ -169,7 +169,7 @@ var TrashModel = function(_lable, _cell, remarks) {
   このゴミの年間のゴミの日を計算します。
   センターが休止期間がある場合は、その期間１週間ずらすという実装を行っております。
 */
-  this.calcMostRect = function(areaObj, today) {
+  this.calcMostRect = function(areaObj) {
     var day_mix = this.dayCell;
     var result_text = "";
     var day_list = new Array();
@@ -177,7 +177,7 @@ var TrashModel = function(_lable, _cell, remarks) {
     // 定期回収の場合
     if (this.regularFlg == 1) {
 
-      //var today = new Date();
+      var today = new Date();
 
       // 12月 +3月　を表現
       for (var i = 0; i < MaxMonth; i++) {
@@ -510,13 +510,10 @@ $(function() {
     //var ableSVG = false;  // SVG未使用の場合、descriptionの1項目目を使用
 	var areaModel = areaModels[row_index];
 	//TestDateで指定した日付で実行できる
-	if(TestDate == null) {
+	
 	var today = new Date();
-	} else {
-		var today = new Date(TestDate.getFullYear,TestDate.getMonth(),TestDate.getDate);
-		}
     //直近の一番近い日付を計算します。
-    areaModel.calcMostRect(today);
+    areaModel.calcMostRect();
     //トラッシュの近い順にソートします。
     areaModel.sortTrash();
     var accordion_height = $(window).height() / descriptions.length;
